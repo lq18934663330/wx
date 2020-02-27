@@ -14,16 +14,16 @@ import wepy from '@wepy/core';
 import eventHub from './common/eventHub';
 import vuex from '@wepy/x';
 
-wepy.use(vuex);
+wepy.use(vuex); // 可以在项目里面使用vuex
 
 wepy.app({
   hooks: {
     // App 级别 hook，对整个 App 生效
     // 同时存在 Page hook 和 App hook 时，优先执行 Page hook，返回值再交由 App hook 处
-    'before-setData': function(dirty) {
-      console.log('setData dirty: ', dirty);
-      return dirty;
-    }
+    // 'before-setData': function(dirty) {
+    //   console.log('setData dirty: ', dirty);
+    //   return dirty;
+    // }
   },
   globalData: {
     userInfo: null
@@ -60,13 +60,49 @@ wepy.app({
 <config>
 {
     pages: [
-      'pages/index'
+      'pages/index',
+			'pages/fenlei',
+      'pages/shiji',
+      'pages/wode',
+      'pages/zhuyeXQ'
+
     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
+      navigationBarTitleText: '',
       navigationBarTextStyle: 'black'
-    }
+    },
+		"tabBar": {
+			"color":"#000",
+			"selectedColor":"#e44718",
+    "list": [
+      {
+        "pagePath": "pages/index",
+        "text": "下厨房",
+				"iconPath":"static/images/home1.png",
+				"selectedIconPath":"static/images/home2.png"
+
+      },
+      {
+        "pagePath": "pages/fenlei",
+        "text": "分类",
+				"iconPath":"static/images/fenlei1.png",
+				"selectedIconPath":"static/images/fenlei2.png"
+      },
+      {
+        "pagePath": "pages/shiji",
+        "text": "市集",
+				"iconPath":"static/images/shiji1.png",
+				"selectedIconPath":"static/images/shiji2.png"
+      },
+      {
+        "pagePath": "pages/wode",
+        "text": "我的",
+				"iconPath":"static/images/wode1.png",
+				"selectedIconPath":"static/images/wode2.png"
+      }
+    ]
+  }
 }
 </config>

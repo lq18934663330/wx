@@ -1,0 +1,127 @@
+<style lang="less">
+.XQbox {
+  overflow: hidden;
+}
+.XQbox .XQIMG {
+  width: 100%;
+}
+</style>
+
+<template>
+  <div>
+    <div class="XQbox">
+      <div :style="{ width: '100%', height: '600rpx', overflow: 'hidden' }">
+        <!-- 菜图 -->
+        <img
+          mode="widthFix"
+          class="XQIMG"
+          v-if="zhuyeXQ.ident"
+          src="{{'http://i5.chuimg.com/'+zhuyeXQ.ident}}"
+          alt=""
+        />
+      </div>
+      <div>
+        <!-- 菜名 -->
+        <p class="XQtitle">{{ zhuyeXQ.name }}</p>
+        <!-- 评分 -->
+        <p>
+          {{ zhuyeXQ.score ? zhuyeXQ.score + '综合评分·' : ''
+          }}{{ zhuyeXQ.stats.n_cooked_last_week }}人最近7天做过
+        </p>
+      </div>
+      <div class="ZZ">
+        <!-- 作者头像 -->
+        <img
+          :style="{ width: '120rpx', height: '120rpx', borderRadius: '50%' }"
+          src="{{zhuyeXQ.author.photo60}}"
+          alt=""
+        />
+
+        <!-- 作者名字 -->
+        <span class="ZZname">{{ zhuyeXQ.author.name }}</span>
+        <!-- 关注按钮 -->
+        <div></div>
+      </div>
+      <!-- 详情 -->
+      <p class="XQxq">{{ zhuyeXQ.desc }}</p>
+
+      <!-- 用料 -->
+      <div>
+        <div v-for="(item, index) in zhuyeXQ.ingredient" :key="index + 'yl'">
+          <p>
+            <span>{{ item.name }}</span
+            ><span>{{ item.amount }}</span>
+          </p>
+        </div>
+      </div>
+      <!-- 步骤 -->
+      <div v-for="(item, index) in zhuyeXQ.instruction" :key="index + 'bz'">
+        <p>步骤{{ item.step * 1 + 1 }}</p>
+
+        <img src="{{item.url}}" alt="" />
+
+        <p>{{ item.text }}</p>
+      </div>
+      <!-- 大家做的这道菜 -->
+      <div></div>
+      <!-- 作者其它菜谱 -->
+      <div></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import eventHub from '../common/eventHub';
+import { mapState } from '@wepy/x';
+import store from '../store';
+import testMixin from '../mixins/test';
+
+wepy.page({
+  store,
+  config: {
+    navigationBarTitleText: 'test'
+  },
+
+  hooks: {
+    // Page 级别 hook, 只对当前 Page 的 setData 生效。
+  },
+
+  mixins: [testMixin],
+
+  data: {
+    title: 'awdawd',
+    zhuyeXQ: []
+  },
+
+  computed: {},
+
+  methods: {},
+  created: function(option) {},
+  onLoad: function(option) {
+    var that = this;
+    console.log(option.id);
+    wx.setNavigationBarTitle({
+      title: option.title
+    });
+    wx.request({
+      url: 'https://www.xiachufang.com/juno/api/v2/recipes/show_v2.json',
+      data: { id: option.id, mode: 'full', is_weapp: '1', weapp_src: 'xcf' },
+      success(res) {
+        console.log(res.data.content.recipe);
+        that.zhuyeXQ = res.data.content.recipe;
+        console.log(that.zhuyeXQ);
+      }
+    });
+  }
+});
+</script>
+<config>
+{
+    
+    usingComponents: {
+     
+      "slide-view": "module:miniprogram-slide-view",
+    }
+}
+</config>

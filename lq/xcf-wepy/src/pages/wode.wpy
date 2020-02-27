@@ -1,0 +1,96 @@
+<style lang="less">
+.a {
+  width: 100rpx;
+  height: 100rpx;
+  position: relative;
+  top: 50rpx;
+  left: 10rpx;
+  background-color: #000;
+}
+.active {
+  width: 100rpx;
+  height: 100rpx;
+  position: relative;
+  top: 50rpx;
+  left: 10rpx;
+  background-color: red;
+}
+</style>
+<wxs module="m1" lang="babel">
+const getTime = (time) => {
+  let date = getDate(time);
+  let hour = date.getHours();
+  let mins = date.getMinutes();
+  let sec = date.getSeconds();
+  let milli = date.getMilliseconds();
+  return `${hour}:${mins}:${sec}.${milli}`;
+}
+module.exports.getTime = getTime;
+</wxs>
+<template>
+  <div>
+    <div class="a" :class="{ active }" @tap="tapH"></div>
+    <div>
+      <p>vuex里面的counter数据: {{ counter }}</p>
+      <button @tap="increment">增加counter</button>
+      <button @tap="incrementAsync">增加counter</button>
+      <button @tap="decrement">减少counter</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import eventHub from '../common/eventHub';
+import { mapState, mapActions } from '@wepy/x';
+import store from '../store';
+import testMixin from '../mixins/test';
+
+wepy.page({
+  store,
+  config: {
+    navigationBarTitleText: 'test'
+  },
+
+  hooks: {},
+
+  mixins: [testMixin],
+
+  data: {
+    a: 'a',
+    active: false
+  },
+
+  computed: {
+    // counter() {
+    //   return this.$store.state.counter;
+    // }
+    ...mapState({
+      //辅助函数
+      counter: state => state.counter
+    })
+  },
+
+  methods: {
+    // add() {
+    //   this.$store.dispatch('increment');
+    // },
+    ...mapActions(['increment', 'decrement', 'incrementAsync']),
+    tapH() {
+      console.log(this.active);
+      this.active = !this.active;
+      console.log(this.active);
+    }
+  }
+});
+</script>
+<config>
+{
+    navigationBarTitleText: '菜谱分类',
+		 "navigationStyle": "custom",
+    usingComponents: {
+     
+      "slide-view": "module:miniprogram-slide-view",
+    }
+}
+</config>

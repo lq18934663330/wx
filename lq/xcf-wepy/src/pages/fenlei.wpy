@@ -1,0 +1,94 @@
+<style lang="less">
+.Box {
+  width: 100%;
+  padding: 20rpx;
+  overflow: hidden;
+}
+.Box .title1 {
+  font-weight: 700;
+  font-size: 40rpx;
+  // line-height: 100rpx;
+  margin-left: 15rpx;
+  margin-bottom: 40rpx;
+}
+.Box .imagesF {
+  width: 160rpx;
+  height: 160rpx;
+  float: left;
+  position: relative;
+  margin: 0 0 15rpx 15rpx;
+  border-radius: 25rpx;
+  overflow: hidden;
+}
+.Box .imagesF .imgF {
+  width: 100%;
+  height: 100%;
+}
+.Box .imagesF .Iname {
+  position: absolute;
+  top: 110rpx;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  font-weight: 700;
+  color: #fff;
+  font-size: 31rpx;
+}
+</style>
+
+<template>
+  <div>
+    <div class="Box" v-for="(item, index) in fenlei" :key="index + 'fenlei'">
+      <h1 class="title1">{{ item.title }}</h1>
+      <div class="imagesF" v-for="(it, idx) in item.entries" :key="idx + 'FL'">
+        <img class="imgF" mode="aspectFit" src="{{it.picurl}}" alt="" />
+        <p class="Iname">{{ it.name }}</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import eventHub from '../common/eventHub';
+import { mapState } from '@wepy/x';
+import store from '../store';
+import testMixin from '../mixins/test';
+
+wepy.page({
+  store,
+
+  hooks: {},
+
+  mixins: [testMixin],
+
+  data: {
+    fenlei: []
+  },
+
+  computed: {},
+
+  methods: {},
+  onLoad: function() {
+    var that = this;
+    wx.request({
+      url:
+        'https://www.xiachufang.com/juno/api/v2/categories/tree_plus.json?is_weapp=1&weapp_src=xcf',
+      data: { is_weapp: '1', weapp_src: 'xcf' },
+      success(res) {
+        console.log(res.data.content);
+        that.fenlei = res.data.content;
+      }
+    });
+  }
+});
+</script>
+<config>
+{
+    navigationBarTitleText: '菜谱分类',
+    usingComponents: {
+     
+      "slide-view": "module:miniprogram-slide-view",
+    }
+}
+</config>
